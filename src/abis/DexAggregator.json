@@ -90,7 +90,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -103,7 +104,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -116,7 +118,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -129,11 +132,13 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "stateMutability": "payable",
-      "type": "receive"
+      "type": "receive",
+      "payable": true
     },
     {
       "inputs": [
@@ -162,7 +167,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -175,7 +181,8 @@
       "name": "buyUSDCAtBestPrice",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [
@@ -22125,12 +22132,13 @@
     "1": {
       "events": {},
       "links": {},
-      "address": "0xfa8896E18d38a8ba9Fe3d184B07b2b5B81AE025F",
-      "transactionHash": "0xd8297d98a2293168b2d4135361bcf1e778c89d5956de24a68bf764e20701b200"
+      "address": "0x4C3D14a6b8BCBA11DF697a60CBbd2463E138C01F",
+      "transactionHash": "0x04fe71a7e2b55d73ca94bb7c8b640383613367f6c6c66ce6497d1555f1e4c015"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-01-09T03:21:32.915Z",
+  "updatedAt": "2022-01-10T20:28:05.623Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

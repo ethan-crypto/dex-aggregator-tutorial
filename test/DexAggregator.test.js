@@ -1,6 +1,5 @@
 const DexAggregator = artifacts.require("DexAggregator")
 const IERC20 = artifacts.require("IERC20")
-const IUniswapRouter02 = artifacts.require('IUniswapV2Router02')
 
 
 const futureTime = (seconds) => {
@@ -22,7 +21,7 @@ contract('DexAggregator', ([deployer, user]) => {
 	const sushiAddress = "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F"
     const wethAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
     const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-	let dexAggregator, usdcRef, uniRouterRef, sushiRouterRef
+	let dexAggregator, usdcRef
     let pairArray 
     let SETTINGS = {
         gasLimit: 6000000, // Override gas settings: https://github.com/ethers-io/ethers.js/issues/469
@@ -154,7 +153,7 @@ contract('DexAggregator', ([deployer, user]) => {
             ethBalance = await web3.eth.getBalance(user) //BN
 
             usdcBalance = await usdcRef.methods.balanceOf(user).call()
-            console.log(`START USDC BALANCE: ${fromUSDC(usdcBalance)}`)
+
             //get USDC amount for 1 ETH from each exchange
             returnAmounts = await dexAggregator.getReturnAmounts(usdcAmountSold, [usdcAddress, wethAddress])
             uniETHReturn = returnAmounts[0]
@@ -186,6 +185,8 @@ contract('DexAggregator', ([deployer, user]) => {
             const ethAdded = +ethBalance.toString() + +highestETHReturn.amount.toString()
             expect(+(newEthBalance.toString())).to.be.lessThan(ethAdded)
             console.log(`${fromWei(newEthBalance).toString()} is approx ${fromWei(ethAdded).toString()}`)
+            // fail case: users can't sell more usdc than they have
+            await dexAggregator.sellUSDCAtBestPrice((newUsdcBalance + 1), futureTime(15), { from: user }).should.be.rejected;
         }) 
         it('emits a "USDCSold" event', () => {
             const log = result.logs[0]
@@ -199,7 +200,7 @@ contract('DexAggregator', ([deployer, user]) => {
             // Find next best USDC return
             nextBestEthReturn = highestETHReturn.amount == uniETHReturn ? sushiETHReturn : uniETHReturn
             event.nextBestEthReturn.toString().should.equal(nextBestEthReturn.toString())
-          }) 
+        }) 
     })
         
 })
