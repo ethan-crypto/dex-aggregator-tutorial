@@ -11,7 +11,7 @@ const renderExchangeRate = (exchangeRate, primary) => {
   return(
     <div className="mb-5">
       <span className={`float-left ${!primary ? `text-muted` : ``}`}>Exchange Rate</span>
-      <span className={`float-right ${!primary ? `text-muted` : ``}`}>{exchangeRate} USDC = 1 ETH </span>
+      <span className={`float-right ${!primary ? `text-muted` : ``}`}>{Math.round(10**6*exchangeRate)/(10**6)} USDC = 1 ETH </span>
     </div>
   )
 }
@@ -30,7 +30,7 @@ const renderExchangeLogo = (exchange, primary) => {
 }
 
  const renderOutputForms = (output, secondaryOutput, input, outputLoading, exchanges) => {
-  let percentReturn = Math.round(10000*((output/secondaryOutput) -1))/100
+  let percentReturn = Math.round((((output/secondaryOutput) -1)*100)*10000)/10000
   console.log(output)
   console.log(secondaryOutput)
   let primaryExchangeRate = window.web3.utils.fromWei(input, "mwei")/ window.web3.utils.fromWei(output, "Ether")
