@@ -31,14 +31,14 @@ contract('DexAggregator', ([deployer, user]) => {
     }
 
 	beforeEach(async () => {
-		dexAggregator = await DexAggregator.new(sushiAddress, usdcAddress)
+		dexAggregator = await DexAggregator.new(sushiAddress, usdcAddress, wethAddress)
         usdcRef = new web3.eth.Contract(IERC20.abi, usdcAddress)
 	})
 
     describe('deployment', () => {
         let result
         it('tracks the correct uniswap router address', async () => {
-            result = await dexAggregator.uniAddress()
+            result = await dexAggregator.UNI_ADDRESS()
             result.toString().should.equal(uniAddress.toString())
         })
         it('tracks the correct sushiswap router address', async () => {
@@ -46,7 +46,7 @@ contract('DexAggregator', ([deployer, user]) => {
             result.toString().should.equal(sushiAddress.toString())
         })
         it('tracks the correct usdc address', async () => {
-            result = await dexAggregator.usdc()
+            result = await dexAggregator.usdcAddress()
             result.toString().should.equal(usdcAddress.toString())
         }) 
         it('tracks the correct weth address', async () => {
@@ -101,8 +101,8 @@ contract('DexAggregator', ([deployer, user]) => {
 
             // Compare return values and find the highest return
             uniUSDCReturn > sushiUSDCReturn 
-            ? highestUSDCReturn = {amount: uniUSDCReturn, router: uniAddress}
-            : highestUSDCReturn = {amount: sushiUSDCReturn, router: sushiAddress}
+            ? highestUSDCReturn = {amount: uniUSDCReturn, dex: uniAddress}
+            : highestUSDCReturn = {amount: sushiUSDCReturn, dex: sushiAddress}
         }) 
         it('Routes ETH to USDC swap to the exchange with highest return', async () => {
             console.log(`START ETH BALANCE: ${fromWei(ethBalance)}`)
@@ -115,7 +115,7 @@ contract('DexAggregator', ([deployer, user]) => {
             // Users new ETH balance should decrease by approximatly ethAmountSold
             // small discrecpency due to fees
             const newEthBalance = await web3.eth.getBalance(user)
-            console.log(`NEW ETH BALANCE: ${fromUSDC(newEthBalance)}`)
+            console.log(`NEW ETH BALANCE: ${fromWei(newEthBalance)}`)
             const ethSubtracted = +ethBalance.toString() - +ethAmountSold.toString()
             expect(+(newEthBalance.toString())).to.be.lessThan(ethSubtracted)
             console.log(`${fromWei(newEthBalance).toString()} is approx ${fromWei(ethSubtracted).toString()}`)
@@ -135,7 +135,7 @@ contract('DexAggregator', ([deployer, user]) => {
             // Amount of USDC bought should equal the highest return offered
             event.usdcAmountBought.toString().should.equal(highestUSDCReturn.amount.toString())
             // Router should equal the router exchange address that offered highest return
-            event.router.toString().should.equal(highestUSDCReturn.router.toString())
+            event.dex.toString().should.equal(highestUSDCReturn.dex.toString())
             // Find next best USDC return
             nextBestUsdcReturn = highestUSDCReturn.amount == uniUSDCReturn ? sushiUSDCReturn : uniUSDCReturn
             event.nextBestUsdcReturn.toString().should.equal(nextBestUsdcReturn.toString())
@@ -169,8 +169,8 @@ contract('DexAggregator', ([deployer, user]) => {
 
             // Compare return values and find the highest return
             uniETHReturn > sushiETHReturn 
-            ? highestETHReturn = {amount: uniETHReturn, router: uniAddress}
-            : highestETHReturn = {amount: sushiETHReturn, router: sushiAddress}
+            ? highestETHReturn = {amount: uniETHReturn, dex: uniAddress}
+            : highestETHReturn = {amount: sushiETHReturn, dex: sushiAddress}
         }) 
         it('Routes USDC to ETH swap to the exchange with highest return', async () => {
             console.log(`START ETH BALANCE: ${fromWei(ethBalance)}`)
@@ -183,7 +183,7 @@ contract('DexAggregator', ([deployer, user]) => {
             // Users new ETH balance should increase by approximatly the highest ETH return
             // small discrecpency due to fees
             const newEthBalance = await web3.eth.getBalance(user)
-            console.log(`NEW ETH BALANCE: ${fromUSDC(newEthBalance)}`)
+            console.log(`NEW ETH BALANCE: ${fromWei(newEthBalance)}`)
             const ethAdded = +ethBalance.toString() + +highestETHReturn.amount.toString()
             expect(+(newEthBalance.toString())).to.be.lessThan(ethAdded)
             console.log(`${fromWei(newEthBalance).toString()} is approx ${fromWei(ethAdded).toString()}`)
@@ -201,7 +201,7 @@ contract('DexAggregator', ([deployer, user]) => {
             // Amount of ETH bought should equal the highest return offered
             event.ethAmountBought.toString().should.equal(highestETHReturn.amount.toString())
             // Router should equal the router exchange address that offered highest return
-            event.router.toString().should.equal(highestETHReturn.router.toString())
+            event.dex.toString().should.equal(highestETHReturn.dex.toString())
             // Find next best USDC return
             nextBestEthReturn = highestETHReturn.amount == uniETHReturn ? sushiETHReturn : uniETHReturn
             event.nextBestEthReturn.toString().should.equal(nextBestEthReturn.toString())
