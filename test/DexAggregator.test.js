@@ -97,14 +97,14 @@ contract('DexAggregator', ([deployer, user]) => {
             sushiUSDCReturn = returnAmounts[1]
             
             //swap 1 ETH for USDC
-            result = await dexAggregator.buyUSDCAtBestPrice(futureTime(15), {value: ethAmountSold, from: user })
+            result = await dexAggregator.buyUSDCAtBestPrice(futureTime(15), [wethAddress, usdcAddress], {value: ethAmountSold, from: user })
 
             // Compare return values and find the highest return
             uniUSDCReturn > sushiUSDCReturn 
             ? highestUSDCReturn = {amount: uniUSDCReturn, router: uniAddress}
             : highestUSDCReturn = {amount: sushiUSDCReturn, router: sushiAddress}
         }) 
-        it('successfully routes ETH to USDC swap to the exchange with highest return', async () => {
+        it('Routes ETH to USDC swap to the exchange with highest return', async () => {
             console.log(`START ETH BALANCE: ${fromWei(ethBalance)}`)
             console.log(`START USDC BALANCE: ${fromUSDC(usdcBalance)}`)
             // Users new USDC balance should increase by the highestUSDCReturn
@@ -119,6 +119,8 @@ contract('DexAggregator', ([deployer, user]) => {
             const ethSubtracted = +ethBalance.toString() - +ethAmountSold.toString()
             expect(+(newEthBalance.toString())).to.be.lessThan(ethSubtracted)
             console.log(`${fromWei(newEthBalance).toString()} is approx ${fromWei(ethSubtracted).toString()}`)
+            // fail case: reverts when the user inputs the wrong traiding pair array
+            await dexAggregator.buyUSDCAtBestPrice(futureTime(15), [usdcAddress, wethAddress], {value: 1, from: user }).should.be.rejected;
         }) 
         it('successfully refunds leftover ETH from the swap', async () => {
             // Aggregator Eth balance should be zero
@@ -163,14 +165,14 @@ contract('DexAggregator', ([deployer, user]) => {
             await usdcRef.methods.approve(dexAggregator.address, usdcAmountSold).send({from: user})
             
             //swap 1000 USDC for ETH 
-            result = await dexAggregator.sellUSDCAtBestPrice(usdcAmountSold, futureTime(15), {from: user })
+            result = await dexAggregator.sellUSDCAtBestPrice(usdcAmountSold, futureTime(15), [usdcAddress, wethAddress], {from: user })
 
             // Compare return values and find the highest return
             uniETHReturn > sushiETHReturn 
             ? highestETHReturn = {amount: uniETHReturn, router: uniAddress}
             : highestETHReturn = {amount: sushiETHReturn, router: sushiAddress}
         }) 
-        it('successfully routes USDC to ETH swap to the exchange with highest return', async () => {
+        it('Routes USDC to ETH swap to the exchange with highest return', async () => {
             console.log(`START ETH BALANCE: ${fromWei(ethBalance)}`)
             console.log(`START USDC BALANCE: ${fromUSDC(usdcBalance)}`)
             // Users new USDC balance should decrease by the usdcAmountSold
@@ -187,6 +189,9 @@ contract('DexAggregator', ([deployer, user]) => {
             console.log(`${fromWei(newEthBalance).toString()} is approx ${fromWei(ethAdded).toString()}`)
             // fail case: users can't sell more usdc than they have
             await dexAggregator.sellUSDCAtBestPrice((newUsdcBalance + 1), futureTime(15), { from: user }).should.be.rejected;
+            // fail case: reverts when the user inputs the wrong traiding pair array
+            await usdcRef.methods.approve(dexAggregator.address, 1).send({from: user})
+            await dexAggregator.buyUSDCAtBestPrice(1 ,futureTime(15), [wethAddress, usdcAddress], { from: user }).should.be.rejected;
         }) 
         it('emits a "USDCSold" event', () => {
             const log = result.logs[0]

@@ -8,6 +8,7 @@ import './App.css'
 import { futureTime } from '../helpers'
 
 const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+const wethAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
 const exchangeDataReset = {        
   outputsLoading: false,
   uniOutput: '0',
@@ -69,7 +70,7 @@ class App extends Component {
 
   buyUsdc = (etherAmount) => {
     this.setState({ loading: true })
-    this.state.dexAggregator.methods.buyUSDCAtBestPrice(futureTime(15)).send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
+    this.state.dexAggregator.methods.buyUSDCAtBestPrice(futureTime(15), [wethAddress, usdcAddress]).send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
       this.setState({ loading: false })
       this.setState({exchangeData : exchangeDataReset})
     })
@@ -79,7 +80,7 @@ class App extends Component {
     this.setState({ loading: true })
     console.log(this.state.dexAggregator)
     await this.state.usdc.methods.approve(this.state.dexAddress, usdcAmount).send({ from: this.state.account })
-    await this.state.dexAggregator.methods.sellUSDCAtBestPrice(usdcAmount, futureTime(15)).send({ from: this.state.account })
+    await this.state.dexAggregator.methods.sellUSDCAtBestPrice(usdcAmount, futureTime(15), [usdcAddress, wethAddress]).send({ from: this.state.account })
     this.setState({ loading: false })
     this.setState({exchangeData : exchangeDataReset})
   }
