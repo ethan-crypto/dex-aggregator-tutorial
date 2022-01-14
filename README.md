@@ -3,7 +3,7 @@
 A simple full stack application with smart contract that compares exchange rates for the weth/usdc traiding pair across Uniswap and Sushiswap and then routes users swap to the dex with the best price.
 
 ### User Interface
-![](https://github.com/ethan-crypto/dex-aggregator-tutorial/Dex-Agg.gif)
+![](https://github.com/ethan-crypto/dex-aggregator-tutorial/blob/master/Dex-Agg.gif)
 
 ## Technology Stack & Tools
 
