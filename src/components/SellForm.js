@@ -117,7 +117,7 @@ class SellForm extends Component {
         </div>
         <div className="input-group mb-4">
           <input
-            type="text"
+            type="number"
             onChange={(event) => {
               usdcAmount = this.input.value.toString()
               if (usdcAmount) {

@@ -47,7 +47,7 @@ class App extends Component {
     if(dexAggregatorData) {
       const dexAggregator = new web3.eth.Contract(DexAggregator.abi, dexAggregatorData.address)
       this.setState({ dexAggregator })
-      this.setState({ dexAddress: dexAggregatorData.address})
+      this.setState({ dexAggregatorAddress: dexAggregatorData.address})
     } else {
       window.alert('DexAggregator contract not deployed to detected network.')
     }
@@ -78,8 +78,7 @@ class App extends Component {
 
   sellUsdc = async (usdcAmount) => {
     this.setState({ loading: true })
-    console.log(this.state.dexAggregator)
-    await this.state.usdc.methods.approve(this.state.dexAddress, usdcAmount).send({ from: this.state.account })
+    await this.state.usdc.methods.approve(this.state.dexAggregatorAddress, usdcAmount).send({ from: this.state.account })
     await this.state.dexAggregator.methods.sellUSDCAtBestPrice(usdcAmount, futureTime(15), [usdcAddress, wethAddress]).send({ from: this.state.account })
     this.setState({ loading: false })
     this.setState({exchangeData : exchangeDataReset})
@@ -115,7 +114,7 @@ class App extends Component {
       ethBalance: '0',
       usdcBalance: '0',
       loading: true,
-      dexAddress: "",
+      dexAggregatorAddress: "",
       exchangeData: exchangeDataReset
     }
   }
