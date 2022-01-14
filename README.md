@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# Dex Aggregator
+### About
+A simple full stack application with smart contract that compares exchange rates for the weth/usdc traiding pair across Uniswap and Sushiswap and then routes users swap to the dex with the best price.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### User Interface
+![](https://github.com/ethan-crypto/dex-aggregator-tutorial/Dex-Agg.gif)
 
-## Available Scripts
+## Technology Stack & Tools
 
-In the project directory, you can run:
+- Solidity (Programming language for writing smart sontracts)
+- Javascript (Used for testing and to build front end with React)
+- [Uniswap V2 Protocol](https://docs.uniswap.org/protocol/V2/introduction)
+- [Sushiswap Protocol](https://dev.sushi.com/)
+- [Web3](https://web3js.readthedocs.io/en/v1.5.2/) (Blockchain interaction)
+- [Truffle](https://www.trufflesuite.com/docs/truffle/overview) (Development Ffamework)
+- [Ganache-cli](https://github.com/trufflesuite/ganachee) (For local blockchain fork of the ethereum mainnet)
+- [Infura](https://infura.io/) (connection to Ethereum networks)
+- [Open Zeppelin](https://infura.io/) (smart contract libraries)
 
-### `npm start`
+## Requirements For Initial Setup
+- Install [NodeJS](https://nodejs.org/en/), should work with any node version below 16.5.0
+- Install [Truffle](https://www.trufflesuite.com/docs/truffle/overview), In your terminal, you can check to see if you have truffle by running `truffle version`. To install truffle run `npm i -g truffle`. Ideal to have truffle version 5.4 to avoid dependency issues.
+- Install [Ganache-cli](https://github.com/trufflesuite/ganachee). Install ganache globally by running `npm install -g ganache-cli` in your terminal
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Setting Up
+### 1. Clone/Download the Repository
+```sh
+$ git clone https://github.com/ethan-crypto/dex-aggregator-tutorial
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. Install Dependencies:
+```
+$ cd dex-aggregator-tutorial
+$ npm install 
+```
 
-### `npm test`
+### 3. Get Infura URL
+- Go to [Infura](https://infura.io/), sign up, create a new project, copy that projects url
+e.g Mainnet URL https://mainnet.infura.io/v3/11111111111111111
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. Start Ganache-cli as a fork of the mainnet and unlock account with a lot of USDC.
+```sh
+$ ganache-cli -f https://mainnet.infura.io/v3/11111111111111111
+-u 0xc647F8f745a59B74A26d76Da7dcCc8BadF649C32
+```
 
-### `npm run build`
+### 4. Connect you ganache-cli addresses to Metamask
+- Copy private key of the addresses in ganache and import to Metamask
+- Connect your metamask to network Localhost 8545 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 5. Run script that transfers USDC from unlcoked account to first development account
+`$ truffle exec ./scripts/transferUSDC.js`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 6. Migrate smart contracts
+`$ truffle migrate --reset`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 7. Run tests
+`$ truffle test`
 
-### `npm run eject`
+### 8. Run app locally 
+`$ npm run start`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+License
+----
+MIT
