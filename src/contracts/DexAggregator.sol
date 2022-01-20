@@ -32,7 +32,6 @@ contract DexAggregator {
         address dex, 
         uint256 nextBestEthOutput
     );
-    // Don't need to pass uni address to constructor b/c its the same across all networks.
     constructor (address _sushiAddress, address _usdcAddress) {
         // Don't need to pass uni address to constructor b/c its the same across all networks.
         Dexes[0] = IDex(address(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D)); 
