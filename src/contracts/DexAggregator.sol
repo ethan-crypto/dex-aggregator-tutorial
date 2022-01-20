@@ -49,7 +49,7 @@ contract DexAggregator {
         // fetch output amounts from each exchange
         _amounts[0] = (Dexes[0].getAmountsOut(_amountIn, _path))[1];
         _amounts[1] = (Dexes[1].getAmountsOut(_amountIn, _path))[1];
-        // If sushi amount is greater than uni amount, swap order of amounts array and set dex which offers the greater output index 0 (sushi)
+        // If sushi amount is greater than uni amount, swap order of amounts array and set dex which offers the greater output index to 1 (sushi)
         if(_amounts[1] > _amounts[0]) {
             _amounts[0] = _amounts[1];
             _amounts[1] = (Dexes[0].getAmountsOut(_amountIn, _path))[1];
