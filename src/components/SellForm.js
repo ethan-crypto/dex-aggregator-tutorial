@@ -94,6 +94,7 @@ class SellForm extends Component {
   render() {
     const {
       outputsLoading,
+      dexIndexWithBestPrice,
       uniOutput,
       sushiOutput
     } = this.props.exchangeData
@@ -147,7 +148,7 @@ class SellForm extends Component {
           </span>
         </div>
         <div>
-          {(uniOutput > sushiOutput)
+          { dexIndexWithBestPrice === "0"
             ? renderOutputForms(uniOutput, sushiOutput, this.state.usdcAmount, outputsLoading, ['Uniswap', 'SushiSwap'])
             : renderOutputForms(sushiOutput, uniOutput, this.state.usdcAmount, outputsLoading, ['SushiSwap', 'Uniswap'])
           }

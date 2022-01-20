@@ -11,6 +11,7 @@ const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 const wethAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
 const exchangeDataReset = {        
   outputsLoading: false,
+  dexIndexWithBestPrice: '0',
   uniOutput: '0',
   sushiOutput: '0',
 }
@@ -88,14 +89,17 @@ class App extends Component {
     let data = this.state.exchangeData
     if(input !== '0' ){
       this.setState({ exchangeData: {...data, outputsLoading: true }})
-      const outputs = await this.state.dexAggregator.methods.getReturnAmounts(input, pairArray).call()
-      console.log(outputs)
+      const result = await this.state.dexAggregator.methods.getOutputAmounts(input, pairArray).call()
+      const index = result[0].toString()
+      const amounts = result[1]
+      console.log(result)
       this.setState({ 
         exchangeData: {
           ...data,
           outputsLoading: false,
-          uniOutput: outputs[0],
-          sushiOutput: outputs[1]
+          dexIndexWithBestPrice: index,
+          uniOutput: index === "0" ? amounts[0] : amounts[1],
+          sushiOutput: index === "0" ? amounts[1] : amounts[0]
         }
       })
     } else {

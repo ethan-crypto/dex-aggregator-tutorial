@@ -94,6 +94,7 @@ class BuyForm extends Component {
   render() {
     const {
       outputsLoading,
+      dexIndexWithBestPrice,
       uniOutput,
       sushiOutput
     } = this.props.exchangeData
@@ -147,7 +148,7 @@ class BuyForm extends Component {
           </span>
         </div>
         <div>
-          {window.web3.utils.fromWei(uniOutput, "ether") > window.web3.utils.fromWei(sushiOutput, "ether")
+          { dexIndexWithBestPrice === "0"
             ? renderOutputForms(uniOutput, sushiOutput, this.state.etherAmount, outputsLoading, ['Uniswap', 'SushiSwap'])
             : renderOutputForms(sushiOutput, uniOutput, this.state.etherAmount, outputsLoading, ['SushiSwap', 'Uniswap'])
           }
