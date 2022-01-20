@@ -61,9 +61,9 @@ contract DexAggregator {
         (uint8 _dex, uint[] memory _USDCAmounts) = getOutputAmounts(msg.value, _path);
         // Route trade to dex with best USDC price
         Dexes[_dex].swapETHForExactTokens{ value: msg.value }(_USDCAmounts[0], _path, msg.sender, _deadline);
-        emit USDCBought(_USDCAmounts[0], msg.value, address(Dexes[_dex]), _USDCAmounts[1]);
         // refund leftover ETH to user
         payable(msg.sender).transfer(address(this).balance);
+        emit USDCBought(_USDCAmounts[0], msg.value, address(Dexes[_dex]), _USDCAmounts[1]);
     }
     function sellUSDCAtBestPrice(uint _USDCAmount, uint _deadline, address[] calldata _path) external {
         require(_path[1] == wethAddress && _path[0] == address(usdc), "Wrong token pair array");
