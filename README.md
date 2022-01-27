@@ -60,10 +60,6 @@ $ ganache-cli -f https://mainnet.infura.io/v3/11111111111111111
 ### 8. Run app locally 
 `$ npm run start`
 
-## VIDEO LINK
-
-https://youtu.be/CUcjMnNjgbk
-
 License
 ----
 MIT
